@@ -1,0 +1,234 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <meta name="description" content="A controlled study of action-token supervision and expert-to-VLM gradient routing in mixture-of-transformer vision-language-action models.">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Should the Action Expert Train the VLM?">
+  <meta property="og:description" content="When should a continuous-action expert update the VLM that conditions it? Evidence from driving and robot manipulation.">
+  <meta property="og:image" content="https://mot-vla-gradient-routing.github.io/assets/figures/iclr_2027_slide_06.png">
+  <title>Should the Action Expert Train the VLM? · Gradient Routing in MoT VLAs</title>
+  <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+  <link rel="stylesheet" href="styles.css?v=20261019j">
+  <script src="molmo_progress.js?v=20261019l" defer></script>
+  <script src="script.js?v=20261019l" defer></script>
+</head>
+<body>
+  <a class="skip-link" href="#main">Skip to content</a>
+
+  <header class="site-header" id="top">
+    <div class="header-inner page-width">
+      <a class="wordmark" href="#top" aria-label="Gradient Routing in MoT VLAs, back to top">
+        <span class="wordmark-symbol" aria-hidden="true"><span></span><span></span><span></span></span>
+        <span>MoT <b>/</b> VLA</span>
+      </a>
+      <nav class="main-nav" aria-label="Main navigation">
+        <a href="#overview">Overview</a>
+        <a href="#method">Method</a>
+        <a href="#results">Results</a>
+        <a href="#demos">Videos</a>
+      </nav>
+      <a class="header-action" href="#demos">Explore rollouts <span aria-hidden="true">↗</span></a>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero page-width" aria-labelledby="hero-title">
+      <div class="hero-copy reveal">
+        <p class="eyebrow"><span class="eyebrow-line"></span> Vision-language-action research <span class="eyebrow-dot">·</span> Driving &amp; manipulation</p>
+        <h1 id="hero-title">Should the Action Expert <em>Train the VLM?</em></h1>
+        <p class="hero-subtitle">Action-token supervision and gradient routing in Mixture-of-Transformer VLAs</p>
+        <p class="hero-dek">We disentangle these factors in autonomous driving and manipulation by independently varying action-token supervision and whether the expert’s loss updates the VLM. In open-loop driving, insulation is competitive with coupling when action tokens are supervised, but increases trajectory-prediction error by roughly 25% when they are not. Under joint training, coupling improves closed-loop performance regardless of supervision.</p>
+        <div class="hero-actions">
+          <a class="button button-primary" href="#overview">Methods and results <span aria-hidden="true">↓</span></a>
+          <a class="button button-secondary" href="#demos"><span class="play-glyph" aria-hidden="true">▶</span> Qualitative examples</a>
+        </div>
+        <p class="release-note">Paper link, authors, and citation will be added with the arXiv release.</p>
+      </div>
+      <div class="hero-figure reveal" data-delay="1">
+        <div class="figure-topline"><span class="figure-kicker">Should the continuous-action loss train only the expert, or also the VLM that produces its conditioning K/V cache?</span><span>Figure 1</span></div>
+        <div class="hero-figure-crop">
+          <img src="assets/figures/iclr_2027_slide_06.png" alt="Paper overview: action-token supervision and action-expert gradients are two routes for training the VLM, with driving results for tokens on and off." width="1914" height="882" fetchpriority="high">
+        </div>
+        <p>We independently vary whether action tokens are supervised and whether the expert’s gradient updates the VLM.</p>
+      </div>
+    </section>
+
+    <section class="section page-width" id="overview" aria-labelledby="overview-title">
+      <div class="section-heading reveal">
+        <p class="section-index">01 <span></span> Action supervision and gradient routing</p>
+        <h2 id="overview-title">Action-token supervision shapes the effect of <em>expert-to-VLM gradient flow.</em></h2>
+        <p>The VLM processes visual observations and language instructions, while the expert generates continuous action chunks conditioned on the VLM’s per-layer key–value representations. We vary future-action-token supervision and expert-to-VLM gradient flow independently.</p>
+      </div>
+
+      <div class="route-explainer reveal" aria-label="Interactive gradient routing illustration">
+        <div class="route-controls">
+          <div class="control-heading"><span class="control-number">01</span><div><strong>Action-token supervision</strong><small>Future-trajectory tokens / FAST action postfix</small></div></div>
+          <div class="segmented" role="group" aria-label="Action-token supervision">
+            <button class="segment is-active" type="button" data-token="on" aria-pressed="true">On</button>
+            <button class="segment" type="button" data-token="off" aria-pressed="false">Off</button>
+          </div>
+          <div class="control-heading"><span class="control-number">02</span><div><strong>Gradient routing</strong><small>Does the flow loss update the VLM?</small></div></div>
+          <div class="segmented" role="group" aria-label="Expert gradient routing">
+            <button class="segment is-active" type="button" data-route="coupled" aria-pressed="true">Coupled</button>
+            <button class="segment" type="button" data-route="insulated" aria-pressed="false">Insulated</button>
+          </div>
+          <p class="control-note" id="routing-explanation" aria-live="polite">The action-token CE and expert flow loss both update the VLM.</p>
+        </div>
+        <div class="route-stage" id="route-stage" data-token="on" data-route="coupled">
+          <div class="stage-label">Action supervision and expert gradient flow</div>
+          <div class="architecture-signals">
+            <div class="token-branch" id="token-branch"><span class="token-branch-label" id="token-branch-label">VLM predicts future-action tokens</span><span class="token-pills" aria-label="Example action tokens"><i>&lt;act7&gt;</i><i>&lt;act9&gt;</i><i>…</i></span><small class="token-types">Trajectory tokens (driving) · FAST postfix (manipulation)</small><span class="token-branch-loss" id="token-branch-loss">Action-token CE updates VLM ↓</span></div>
+            <div class="action-branch"><span>Continuous actions</span><svg viewBox="0 0 118 22" aria-hidden="true"><path d="M2 15 C18 2 29 3 42 12 S66 24 79 12 S101 2 115 12"/></svg><small>Flow loss ∇L<sub>flow</sub> ↓</small></div>
+          </div>
+          <div class="route-diagram">
+            <div class="diagram-input"><img src="assets/figures/architecture-traffic.jpg" alt="Forward camera observation of traffic at an intersection" width="620" height="322"><span class="diagram-small">Visual observation</span><span class="language-card">“What should the vehicle do next?”</span></div>
+            <span class="diagram-arrow diagram-arrow-first" aria-hidden="true">→</span>
+            <div class="diagram-vlm">VLM</div>
+            <span class="diagram-arrow diagram-arrow-second"><span aria-hidden="true">→</span><small>layerwise K/V</small></span>
+            <div class="diagram-expert">Action<br>expert</div>
+          </div>
+          <div class="gradient-path" aria-hidden="true"><span class="gradient-track"></span><span class="gradient-particle"></span><span class="gradient-particle"></span><span class="gradient-particle"></span><span class="gradient-stop"><span>×</span><small>stop-gradient</small></span></div>
+          <p class="gradient-back-label" id="flow-signal-state" aria-live="polite">Flow loss gradient reaches the VLM</p>
+          <p class="diagram-footnote" id="token-note">The VLM is supervised to predict future-action tokens during training. They are not decoded at evaluation.</p>
+          <p class="diagram-footnote">VQA, reasoning, and structural-token supervision remain active in every condition. Stop-gradient changes only the backward pass through the K/V interface.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-soft" id="method" aria-labelledby="method-title">
+      <div class="page-width">
+        <div class="section-heading reveal">
+          <p class="section-index">02 <span></span> Experimental design</p>
+          <h2 id="method-title">Action-token supervision, gradient routing, <em>and training schedules.</em></h2>
+          <p>We test whether supervision on discrete future-action tokens changes the effect of propagating gradients from a continuous action expert into the VLM. We vary the two factors independently while holding the architecture and semantic supervision fixed.</p>
+        </div>
+        <div class="method-layout">
+          <figure class="paper-figure method-figure reveal">
+            <button class="image-zoom" type="button" data-zoom="assets/figures/iclr_2027_slide_08.png" data-caption="Action-token supervision, gradient routing, and three training schedules." aria-label="Enlarge methodology figure"><span>Enlarge figure ↗</span><img src="assets/figures/iclr_2027_slide_08.png" alt="Paper methodology figure showing the four token and gradient conditions, plus concurrent, VLM-first, and expert-first schedules." loading="lazy" width="2277" height="875"></button>
+            <figcaption>All four conditions are evaluated under concurrent, VLM-first, and expert-first training.</figcaption>
+          </figure>
+          <div class="method-points reveal" data-delay="1">
+            <div class="method-point"><span>01</span><div><h3>Same future trajectory</h3><p>The discrete action tokens and continuous expert encode the same future trajectory.</p></div></div>
+            <div class="method-point"><span>02</span><div><h3>Gradient routing</h3><p>Insulation stops the expert’s gradient before it enters the VLM. The forward computation is unchanged.</p></div></div>
+            <div class="method-point"><span>03</span><div><h3>Training schedules</h3><p>Concurrent training starts both modules together. VLM-first and expert-first training start one module after 100k steps of training the other.</p></div></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section page-width" id="results" aria-labelledby="results-title">
+      <div class="section-heading reveal">
+        <p class="section-index">03 <span></span> Results</p>
+        <h2 id="results-title">The value of insulation depends on <em>action supervision and evaluation setting.</em></h2>
+        <p>In open-loop driving, insulation is competitive with coupling when action tokens are supervised. Under concurrent training, coupling improves closed-loop performance regardless of supervision.</p>
+      </div>
+
+      <article class="result-block result-openloop" aria-labelledby="openloop-title">
+        <div class="result-copy reveal">
+          <p class="result-eyebrow">01 / Open-loop driving <span>ADE ↓</span></p>
+          <h3 id="openloop-title">The effect of gradient routing depends on action-token supervision.</h3>
+          <p>With action-token supervision, insulation slightly lowers ADE on the Public Golden split, while the OOD routing difference is comparatively small. Without action-token supervision, the insulated model has substantially higher ADE in both evaluations. Relative to insulation, coupling reduces ADE by approximately 26% on Public Golden and 24% on OOD.</p>
+          <p class="detail-note">First-sample mean ADE at 300k total steps. Bootstrap intervals capture variation across evaluation clips for fixed checkpoints.</p>
+        </div>
+        <figure class="paper-figure result-figure reveal" data-delay="1">
+          <button class="image-zoom" type="button" data-zoom="assets/figures/driving_cot_endpoint_factorial_ade_both_sets_ci.png" data-caption="First-sample mean ADE across training histories on OOD and Public Golden driving evaluations. Lower is better." aria-label="Enlarge open-loop driving figure"><span>Enlarge figure ↗</span><img src="assets/figures/driving_cot_endpoint_factorial_ade_both_sets_ci.png" alt="Six-panel paper chart of driving ADE across concurrent, VLM-first and expert-first training. Token-off insulated models have the highest error in every history." loading="lazy" width="1403" height="762"></button>
+          <figcaption>First-sample mean ADE across training histories; lower is better. Source: manuscript figure.</figcaption>
+        </figure>
+      </article>
+
+      <article class="result-block result-closedloop" aria-labelledby="closedloop-title">
+        <div class="result-copy reveal">
+          <p class="result-eyebrow">02 / Closed-loop driving <span>Route progress ↑</span></p>
+          <h3 id="closedloop-title">Coupling improves route progress with and without action-token supervision.</h3>
+          <p>In concurrent training, coupling raises AlpaSim route progress from 0.600 to 0.703 with action-token supervision and from 0.425 to 0.601 without it. The latter is a 17.6 percentage-point increase on the same evaluation scenes.</p>
+          <p class="detail-note">Five stochastic rollouts per scene are averaged within each scene. Progress is normalized from 0 to 1.</p>
+        </div>
+        <div class="progress-panel reveal" data-delay="1">
+          <div class="panel-heading"><span>Concurrent training · 300k steps</span><span class="panel-tag">AlpaSim</span></div>
+          <div class="panel-tabs" role="group" aria-label="Closed-loop action-token setting"><button type="button" class="is-active" data-progress-mode="off" aria-pressed="true">Tokens off</button><button type="button" data-progress-mode="on" aria-pressed="false">Tokens on</button></div>
+          <div class="bar-chart" aria-live="polite">
+            <div class="bar-row"><div class="bar-meta"><span>Insulated</span><strong id="bar-insulated-label">42.5%</strong></div><div class="bar-track"><div class="bar-fill bar-insulated" id="bar-insulated" style="width:42.5%"></div></div></div>
+            <div class="bar-row"><div class="bar-meta"><span>Coupled</span><strong id="bar-coupled-label">60.1%</strong></div><div class="bar-track"><div class="bar-fill bar-coupled" id="bar-coupled" style="width:60.1%"></div></div></div>
+          </div>
+          <div class="progress-delta"><span id="progress-delta">+17.6 percentage points</span><span>without action-token supervision</span></div>
+        </div>
+      </article>
+
+      <details class="supporting-figure reveal">
+        <summary>See closed-loop progress across training histories <span aria-hidden="true">↗</span></summary>
+        <figure class="paper-figure"><img src="assets/figures/alpasim_300k_progress_training_histories.png" alt="Manuscript chart comparing route progress across concurrent, VLM-first, and expert-first training histories." loading="lazy"><figcaption>AlpaSim route progress across the three driving training histories. Source: manuscript figure.</figcaption></figure>
+      </details>
+
+      <article class="result-block result-manipulation" aria-labelledby="manipulation-title">
+        <div class="result-copy reveal">
+          <p class="result-eyebrow">03 / Robot manipulation <span>Task progress ↑</span></p>
+          <h3 id="manipulation-title">Coupling improves observed closed-loop manipulation progress with and without FAST supervision.</h3>
+          <p>The observed gain is larger without FAST: mean progress rises from 10.3% to 32.9%, compared with 19.5% to 30.7% with FAST.</p>
+          <p class="detail-note">Equal-weight mean over BlockStackKitchen, FoodBussing, and PanClean at 400k training steps.</p>
+        </div>
+        <div class="manipulation-panel reveal" data-delay="1" aria-label="Manipulation progress by training condition">
+          <div class="panel-heading"><span>Three-environment average</span><span class="panel-tag">PolaRiS</span></div>
+          <div class="manip-row"><span>FAST on · Insulated</span><div class="mini-track"><i style="width:48.75%" class="mini-blue"></i></div><strong>19.5%</strong></div>
+          <div class="manip-row"><span>FAST on · Coupled</span><div class="mini-track"><i style="width:76.75%" class="mini-blue-outline"></i></div><strong>30.7%</strong></div>
+          <div class="manip-row"><span>FAST off · Insulated</span><div class="mini-track"><i style="width:25.75%" class="mini-slate"></i></div><strong>10.3%</strong></div>
+          <div class="manip-row"><span>FAST off · Coupled</span><div class="mini-track"><i style="width:82.25%" class="mini-amber"></i></div><strong>32.9%</strong></div>
+          <p>Bar scale: 0–40% progress. Coupled training without FAST achieves the highest mean progress among the four conditions.</p>
+        </div>
+      </article>
+    </section>
+
+    <section class="section section-soft demos-section" id="demos" aria-labelledby="demos-title">
+      <div class="page-width">
+        <div class="section-heading reveal">
+          <p class="section-index">04 <span></span> Qualitative examples</p>
+          <h2 id="demos-title">Selected <em>closed-loop rollouts.</em></h2>
+          <p>These examples show individual rollouts. The results above report aggregate evaluations.</p>
+        </div>
+
+        <div class="demo-heading reveal"><div><span class="demo-index">A / Driving</span><h3>Three scenes, four training conditions</h3><p>Each scene shows S0 300k AlpaSim rollouts for the four action-token and gradient-routing conditions. Select a scene to compare the model reasoning and predicted trajectory.</p></div><span class="demo-meta">S0 · 300k steps · 20 s</span></div>
+        <div class="driving-player reveal" id="driving-player">
+          <div class="driving-toolbar">
+            <div class="view-switch" role="group" aria-label="Driving demo"><button type="button" class="is-active" data-driving-scene="scene_01" aria-label="Demo 1: rainy left turn" aria-pressed="true">Demo 1</button><button type="button" data-driving-scene="scene_02" aria-label="Demo 2: traffic queue" aria-pressed="false">Demo 2</button><button type="button" data-driving-scene="scene_03" aria-label="Demo 3: open highway" aria-pressed="false">Demo 3</button></div>
+          </div>
+          <div class="driving-pair" id="driving-grid">
+            <div class="driving-card"><div class="video-card-head"><span class="condition-dot token-on"></span><strong>Insulated · tokens on</strong></div><video data-driving-arm="insulated_tokens_on" playsinline muted preload="metadata" poster="assets/videos/driving/scene_01_insulated_tokens_on.jpg" aria-label="Insulated driving rollout with action tokens on"><source src="assets/videos/driving/scene_01_insulated_tokens_on.mp4" type="video/mp4">Your browser does not support video playback.</video></div>
+            <div class="driving-card"><div class="video-card-head"><span class="condition-dot token-off"></span><strong>Insulated · tokens off</strong></div><video data-driving-arm="insulated_tokens_off" playsinline muted preload="metadata" poster="assets/videos/driving/scene_01_insulated_tokens_off.jpg" aria-label="Insulated driving rollout with action tokens off"><source src="assets/videos/driving/scene_01_insulated_tokens_off.mp4" type="video/mp4">Your browser does not support video playback.</video></div>
+            <div class="driving-card"><div class="video-card-head"><span class="condition-dot token-on coupled-dot"></span><strong>Coupled · tokens on</strong></div><video data-driving-arm="coupled_tokens_on" playsinline muted preload="metadata" poster="assets/videos/driving/scene_01_coupled_tokens_on.jpg" aria-label="Coupled driving rollout with action tokens on"><source src="assets/videos/driving/scene_01_coupled_tokens_on.mp4" type="video/mp4">Your browser does not support video playback.</video></div>
+            <div class="driving-card"><div class="video-card-head"><span class="condition-dot token-off coupled-dot"></span><strong>Coupled · tokens off</strong></div><video data-driving-arm="coupled_tokens_off" playsinline muted preload="metadata" poster="assets/videos/driving/scene_01_coupled_tokens_off.jpg" aria-label="Coupled driving rollout with action tokens off"><source src="assets/videos/driving/scene_01_coupled_tokens_off.mp4" type="video/mp4">Your browser does not support video playback.</video></div>
+          </div>
+          <div class="sync-controls" aria-label="Synchronized driving video controls"><button type="button" id="driving-sync-play" class="sync-play" aria-label="Play all four driving videos">▶ <span>Play all</span></button><input type="range" id="driving-sync-scrub" min="0" max="19.95" step="0.05" value="0" aria-label="Seek all four driving videos"><span id="driving-sync-time" class="sync-time">0:00 / 0:20</span><button type="button" id="driving-sync-restart" class="sync-restart" aria-label="Restart all four driving videos">↺</button></div>
+        </div>
+        <details class="supporting-figure reveal">
+          <summary>See the manuscript’s driving qualitative figure <span aria-hidden="true">↗</span></summary>
+          <figure class="paper-figure"><img src="assets/figures/closed_loop_av_qualitative.png" alt="Manuscript qualitative figure comparing selected closed-loop driving rollouts across training conditions." loading="lazy"><figcaption>Selected closed-loop driving cases from the manuscript.</figcaption></figure>
+        </details>
+
+        <div class="demo-heading demo-heading-second reveal"><div><span class="demo-index">B / MolmoAct2 manipulation</span><h3>Three paired tasks</h3><p>Four S0 conditions from the same initial state and instruction in each task. The progress score updates when the PolaRiS evaluator records a new milestone.</p></div><span class="demo-meta">S0 300k · PolaRiS adaptation 1k · 15 s</span></div>
+        <div class="polaris-player reveal" id="molmo-player">
+          <div class="driving-toolbar"><div class="view-switch" role="group" aria-label="MolmoAct2 task"><button type="button" class="is-active" data-molmo-scene="pan_clean_ic33" aria-pressed="true">PanClean</button><button type="button" data-molmo-scene="move_latte_cup_ic33" aria-pressed="false">MoveLatteCup</button><button type="button" data-molmo-scene="tape_into_container_ic13" aria-pressed="false">TapeIntoContainer</button></div></div>
+          <p class="molmo-instruction"><strong id="molmo-instruction">Use the yellow sponge to scrub the blue handle frying pan.</strong></p>
+          <div class="polaris-grid" id="molmo-grid">
+            <div class="video-card"><div class="video-card-head"><span class="condition-dot token-on"></span><strong>Insulated · FAST on</strong><div class="molmo-score" role="progressbar" aria-label="Rollout progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-level="zero"><span>Progress</span><strong data-molmo-progress>0%</strong><i aria-hidden="true"></i></div></div><video data-molmo-arm="fast_insulated" playsinline muted preload="metadata" poster="assets/videos/molmoact2/pan_clean_ic33_fast_insulated.jpg" aria-label="MolmoAct2 insulated with FAST"><source src="assets/videos/molmoact2/pan_clean_ic33_fast_insulated.mp4" type="video/mp4"></video></div>
+            <div class="video-card"><div class="video-card-head"><span class="condition-dot token-off"></span><strong>Insulated · FAST off</strong><div class="molmo-score" role="progressbar" aria-label="Rollout progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-level="zero"><span>Progress</span><strong data-molmo-progress>0%</strong><i aria-hidden="true"></i></div></div><video data-molmo-arm="no_fast_insulated" playsinline muted preload="metadata" poster="assets/videos/molmoact2/pan_clean_ic33_no_fast_insulated.jpg" aria-label="MolmoAct2 insulated without FAST"><source src="assets/videos/molmoact2/pan_clean_ic33_no_fast_insulated.mp4" type="video/mp4"></video></div>
+            <div class="video-card"><div class="video-card-head"><span class="condition-dot token-on coupled-dot"></span><strong>Coupled · FAST on</strong><div class="molmo-score" role="progressbar" aria-label="Rollout progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-level="zero"><span>Progress</span><strong data-molmo-progress>0%</strong><i aria-hidden="true"></i></div></div><video data-molmo-arm="fast_coupled" playsinline muted preload="metadata" poster="assets/videos/molmoact2/pan_clean_ic33_fast_coupled.jpg" aria-label="MolmoAct2 coupled with FAST"><source src="assets/videos/molmoact2/pan_clean_ic33_fast_coupled.mp4" type="video/mp4"></video></div>
+            <div class="video-card"><div class="video-card-head"><span class="condition-dot token-off coupled-dot"></span><strong>Coupled · FAST off</strong><div class="molmo-score" role="progressbar" aria-label="Rollout progress" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0" data-level="zero"><span>Progress</span><strong data-molmo-progress>0%</strong><i aria-hidden="true"></i></div></div><video data-molmo-arm="no_fast_coupled" playsinline muted preload="metadata" poster="assets/videos/molmoact2/pan_clean_ic33_no_fast_coupled.jpg" aria-label="MolmoAct2 coupled without FAST"><source src="assets/videos/molmoact2/pan_clean_ic33_no_fast_coupled.mp4" type="video/mp4"></video></div>
+          </div>
+          <div class="sync-controls" aria-label="Synchronized MolmoAct2 video controls"><button type="button" id="molmo-play" class="sync-play" aria-label="Play all four MolmoAct2 videos">▶ <span>Play all</span></button><input type="range" id="molmo-scrub" min="0" max="14.93" step="0.05" value="0" aria-label="Seek all four MolmoAct2 videos"><span id="molmo-time" class="sync-time">0:00 / 0:15</span><button type="button" id="molmo-restart" class="sync-restart" aria-label="Restart all four MolmoAct2 videos">↺</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section page-width perspective" aria-labelledby="perspective-title">
+      <div class="perspective-mark reveal">“</div>
+      <div class="perspective-copy reveal" data-delay="1"><p class="section-index">05 <span></span> Discussion</p><h2 id="perspective-title">VLM insulation is a <em>training decision</em>, not a default VLA training recipe.</h2><p>Action-token supervision and expert gradients can partly substitute for each other in learning representations useful for control. Under concurrent training, coupling improves closed-loop route progress even with action-token supervision, and the same pattern appears in manipulation.</p></div>
+    </section>
+  </main>
+
+  <footer class="site-footer"><div class="page-width footer-inner"><div><span class="footer-brand">MoT / VLA</span><p>Gradient routing in vision-language-action models.<br>Project page for the forthcoming arXiv manuscript.</p></div><div class="footer-links"><a href="#overview">Overview ↑</a><a href="#demos">Videos ↑</a><a href="#top">Back to top ↑</a></div></div></footer>
+
+  <dialog id="image-dialog" class="image-dialog" aria-label="Enlarged research figure"><button type="button" id="dialog-close" class="dialog-close" aria-label="Close enlarged figure">×</button><img id="dialog-image" alt=""><p id="dialog-caption"></p></dialog>
+</body>
+</html>
