@@ -11,7 +11,7 @@
   <meta property="og:image" content="https://mot-vla-gradient-routing.github.io/assets/figures/iclr_2027_slide_06.png">
   <title>Should the Action Expert Train the VLM? · Gradient Routing in MoT VLAs</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=20261022a">
+  <link rel="stylesheet" href="styles.css?v=20261022b">
   <script src="molmo_progress.js?v=20261019l" defer></script>
   <script src="script.js?v=20261022a" defer></script>
 </head>
@@ -38,9 +38,8 @@
     <section class="hero page-width" aria-labelledby="hero-title">
       <div class="hero-copy reveal">
         <h1 id="hero-title">Should the Action Expert <em>Train the VLM?</em></h1>
-        <p class="hero-subtitle">Action-token supervision and gradient routing in Mixture-of-Transformer VLAs</p>
-        <div class="hero-takeaway"><strong>VLM insulation is a training decision, not a default VLA training recipe.</strong><p>Action-token supervision and expert gradients can partly substitute for each other in learning representations useful for control. Under concurrent training, coupling improves closed-loop route progress even with action-token supervision, and the same pattern appears in manipulation.</p></div>
-        <p class="hero-dek">We disentangle these factors in autonomous driving and manipulation by independently varying action-token supervision and whether the expert’s loss updates the VLM. In open-loop driving, insulation is competitive with coupling when action tokens are supervised, but increases trajectory-prediction error by roughly 25% when they are not. Under joint training, coupling improves closed-loop performance regardless of supervision. <strong>These findings show that the value of gradient insulation depends on the VLM’s action supervision and the evaluation setting, challenging insulation as a default VLA training recipe.</strong></p>
+        <p class="hero-subtitle">Action-Token Supervision and Gradient Routing in Mixture-of-Transformer VLAs</p>
+        <div class="hero-takeaway"><span class="tldr-label">TL;DR</span><strong>Whether to insulate the VLM depends on action-token supervision and the evaluation setting.</strong><p>We study this choice in autonomous driving and manipulation by independently varying action-token supervision and expert-to-VLM gradient flow. In open-loop driving, action-token supervision can partly substitute for expert gradients: insulation is competitive with coupling when action tokens are supervised, but increases prediction error by roughly 25% without them. Under concurrent training, coupling improves closed-loop driving performance regardless of action-token supervision, with a similar pattern in manipulation. These results challenge insulation as a default VLA training recipe.</p></div>
         <div class="hero-actions">
           <a class="button button-primary" href="#overview">Methods and results <span aria-hidden="true">↓</span></a>
           <a class="button button-secondary" href="#demos"><span class="play-glyph" aria-hidden="true">▶</span> Qualitative examples</a>
@@ -135,7 +134,7 @@
         </div>
         <figure class="paper-figure result-figure reveal" data-delay="1">
           <button class="image-zoom" type="button" data-zoom="assets/figures/driving_cot_endpoint_factorial_ade_both_sets_ci.png" data-caption="First-sample mean ADE across training histories on OOD and Public Golden driving evaluations. Lower is better." aria-label="Enlarge open-loop driving figure"><span>Enlarge figure ↗</span><img src="assets/figures/driving_cot_endpoint_factorial_ade_both_sets_ci.png" alt="Six-panel paper chart of driving ADE across concurrent, VLM-first and expert-first training. Token-off insulated models have the highest error in every history." loading="lazy" width="1403" height="762"></button>
-          <figcaption>First-sample mean ADE across training histories; lower is better. Source: manuscript figure.</figcaption>
+          <figcaption>First-sample mean ADE across training histories; lower is better.</figcaption>
         </figure>
       </article>
 
@@ -159,7 +158,7 @@
 
       <details class="supporting-figure reveal">
         <summary>See closed-loop progress across training histories <span aria-hidden="true">↗</span></summary>
-        <figure class="paper-figure"><img src="assets/figures/alpasim_300k_progress_training_histories.png" alt="Manuscript chart comparing route progress across concurrent, VLM-first, and expert-first training histories." loading="lazy"><figcaption>AlpaSim route progress across the three driving training histories. Source: manuscript figure.</figcaption></figure>
+        <figure class="paper-figure"><img src="assets/figures/alpasim_300k_progress_training_histories.png" alt="Manuscript chart comparing route progress across concurrent, VLM-first, and expert-first training histories." loading="lazy"><figcaption>AlpaSim route progress across the three driving training histories.</figcaption></figure>
       </details>
 
       <article class="result-block result-manipulation" aria-labelledby="manipulation-title">
@@ -206,7 +205,7 @@
         </div>
         <details class="supporting-figure reveal">
           <summary>See the manuscript’s driving qualitative figure <span aria-hidden="true">↗</span></summary>
-          <figure class="paper-figure"><img src="assets/figures/closed_loop_av_qualitative.png" alt="Manuscript qualitative figure comparing selected closed-loop driving rollouts across training conditions." loading="lazy"><figcaption>Selected closed-loop driving cases from the manuscript.</figcaption></figure>
+          <figure class="paper-figure"><img src="assets/figures/closed_loop_av_qualitative.png" alt="Manuscript qualitative figure comparing selected closed-loop driving rollouts across training conditions." loading="lazy"><figcaption>Selected closed-loop driving cases.</figcaption></figure>
         </details>
 
         <div class="demo-heading demo-heading-second reveal"><div><span class="demo-index">B / MolmoAct2 manipulation</span><h3>Three paired tasks</h3><p>Four concurrent-training conditions from the same initial state and instruction in each task. The progress score updates when the PolaRiS evaluator records a new milestone.</p></div><span class="demo-meta">Concurrent training · 300k steps · PolaRiS adaptation 1k · 15 s</span></div>
