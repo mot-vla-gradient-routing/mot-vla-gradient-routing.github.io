@@ -111,3 +111,55 @@ html.has-js .reveal{opacity:0;transform:translateY(17px);transition:opacity .7s,
 .driving-toolbar .view-switch button{flex:1;white-space:nowrap}
 @media(max-width:720px){.driving-toolbar .view-switch{display:grid;grid-template-columns:1fr}.driving-toolbar .view-switch button{text-align:left}.driving-card video{aspect-ratio:25/9}}
 @media(max-width:540px){.token-types{font-size:6px}}
+
+/* Readable labels throughout figures, controls, and result panels. */
+.hero-takeaway{max-width:740px;margin:0 auto 22px;padding:20px 24px;border-left:4px solid var(--amber);background:#f5f9fb;text-align:left}
+.hero-takeaway strong{display:block;color:var(--navy);font:800 clamp(19px,2vw,24px)/1.35 'Manrope',sans-serif;letter-spacing:-.025em}
+.hero-takeaway p{margin:10px 0 0;color:#405c6d;font-size:17px;line-height:1.55}
+.hero-dek{font-size:17px;line-height:1.6;color:#526b7b}
+.hero-dek strong{display:block;margin-top:17px;color:var(--navy);font-weight:800}
+.section-index{font-size:16px;letter-spacing:.08em}
+.result-eyebrow,.demo-index{font-size:14px;letter-spacing:.1em}
+.figure-topline{font-size:14px;line-height:1.45;letter-spacing:.06em}
+.figure-topline .figure-kicker{font-size:18px;line-height:1.45}
+.hero-figure>p,.paper-figure figcaption{font-size:15px;line-height:1.5;color:#546d7d}
+.hero-figure-crop .image-zoom{padding:0}
+.image-zoom>span{font-size:13px}
+.supporting-figure summary{font-size:15px}
+.route-explainer{grid-template-columns:350px minmax(0,1fr)}
+.control-number{font-size:15px}
+.control-heading strong{font-size:17px}
+.control-heading small{font-size:14px;color:#536c7c}
+.segment,.panel-tabs button,.view-switch button{font-size:14px}
+.control-note{font-size:15px;color:#536b7c}
+.stage-label{font-size:14px;letter-spacing:.07em}
+.token-branch-label{font-size:14px}
+.token-pills i{font-size:14px}
+.token-types{font-size:11px}
+.token-branch-loss{font-size:13px}
+.architecture-signals .action-branch{font-size:14px}
+.action-branch small{font-size:12px}
+.diagram-input .diagram-small{font-size:12px}
+.language-card{font-size:11px}
+.diagram-arrow-second small{font-size:11px}
+.gradient-back-label{font-size:14px}
+.gradient-stop small{font-size:11px}
+.route-stage .diagram-footnote{font-size:16px;color:#405d6e}
+.method-point>span{font-size:15px}
+.method-point h3{font-size:19px}
+.method-point p{font-size:16px;color:#526b7b}
+.result-copy>p:not(.result-eyebrow){font-size:16px}
+.result-copy .detail-note{font-size:14px!important;color:#657a87!important}
+.panel-heading{font-size:15px}
+.panel-tag{font-size:12px}
+.bar-meta{font-size:14px}
+.manip-row{grid-template-columns:180px minmax(0,1fr) 53px;font-size:14px}
+.manip-row strong{font-size:15px}
+.manipulation-bars .mini-track i{transition:width .55s ease}
+.progress-panel>p,.manipulation-panel>p{font-size:14px;color:#657b89;line-height:1.45}
+.demo-heading p,.video-caption{font-size:15px}
+.molmo-instruction strong{font-size:15px}
+.molmo-score span{font-size:12px}
+@media(max-width:1000px){.route-explainer{grid-template-columns:290px minmax(0,1fr)}.manip-row{grid-template-columns:150px minmax(0,1fr) 53px;font-size:13px}}
+@media(max-width:760px){.route-explainer{grid-template-columns:1fr}.hero-dek{font-size:16px}.section-heading>p:last-child{font-size:16px}.demo-meta{display:inline-block;font-size:13px}.manip-row{grid-template-columns:180px minmax(0,1fr) 53px;font-size:14px}}
+@media(max-width:540px){.hero-takeaway{padding:16px 18px}.hero-takeaway p{font-size:15px}.figure-topline .figure-kicker{font-size:16px}.route-stage{padding:22px 14px}.route-diagram{gap:4px}.architecture-signals .token-branch{padding:8px 3px}.architecture-signals .action-branch{min-height:125px;font-size:12px}.action-branch small{font-size:10px}.token-branch-label{font-size:11px}.token-pills i{font-size:11px;padding:2px 3px}.token-branch-loss{font-size:10px}.token-types{font-size:9px}.diagram-input,.diagram-vlm,.diagram-expert{height:135px}.diagram-input img{height:58px}.diagram-input .diagram-small{font-size:10px}.language-card{font-size:9px}.diagram-arrow-second small{width:48px;font-size:9px}.route-stage .diagram-footnote{font-size:15px}.gradient-back-label{font-size:12px}.gradient-stop small{font-size:10px}.manip-row{grid-template-columns:minmax(0,126px) minmax(0,1fr) 48px;gap:7px;font-size:12px}.manip-row strong{font-size:13px}.panel-heading{font-size:13px}.panel-tag{font-size:11px}.demo-meta{display:inline-block;font-size:12px}.method-point p{font-size:15px}}

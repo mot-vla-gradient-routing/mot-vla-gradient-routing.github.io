@@ -64,6 +64,37 @@ $$('button[data-progress-mode]').forEach(button => {
   });
 });
 
+const manipulationResults = {
+  pi05: {
+    label: 'π₀.₅',
+    values: { fast_insulated: 19.5, fast_coupled: 30.7, no_fast_insulated: 10.3, no_fast_coupled: 32.9 },
+    summary: 'The observed gain is larger without FAST: mean progress rises from 10.3% to 32.9%, compared with 19.5% to 30.7% with FAST.',
+    context: 'Equal-weight mean over BlockStackKitchen, FoodBussing, and PanClean at 400k training steps.',
+    reference: 'Published π₀.₅ reference: 40.0% (CoVeR’s evaluation protocol).'
+  },
+  molmoact2: {
+    label: 'MolmoAct2',
+    values: { fast_insulated: 22.0, fast_coupled: 24.3, no_fast_insulated: 14.5, no_fast_coupled: 36.5 },
+    summary: 'The observed gain is larger without FAST: mean progress rises from 14.5% to 36.5%, compared with 22.0% to 24.3% with FAST.',
+    context: 'Equal-weight mean over BlockStackKitchen, FoodBussing, and PanClean after 300k training steps and 1k PolaRiS adaptation steps.',
+    reference: 'Released MolmoAct2 reference: 32.9% after our fine-tuning and evaluation.'
+  }
+};
+$$('button[data-manipulation-model]').forEach(button => {
+  button.addEventListener('click', () => {
+    const data = manipulationResults[button.dataset.manipulationModel];
+    setPressed($$('button[data-manipulation-model]'), button);
+    $('#manipulation-family-tag').textContent = data.label;
+    $('#manipulation-summary').textContent = data.summary;
+    $('#manipulation-context').textContent = data.context;
+    $('#manipulation-reference').textContent = data.reference;
+    for (const [condition, value] of Object.entries(data.values)) {
+      $(`[data-manipulation-bar="${condition}"]`).style.width = `${value / 40 * 100}%`;
+      $(`[data-manipulation-value="${condition}"]`).textContent = `${value.toFixed(1)}%`;
+    }
+  });
+});
+
 const drivingVideos = $$('#driving-grid video');
 const drivingPlay = $('#driving-sync-play');
 const drivingScrub = $('#driving-sync-scrub');

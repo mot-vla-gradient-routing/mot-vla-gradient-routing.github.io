@@ -11,9 +11,9 @@
   <meta property="og:image" content="https://mot-vla-gradient-routing.github.io/assets/figures/iclr_2027_slide_06.png">
   <title>Should the Action Expert Train the VLM? · Gradient Routing in MoT VLAs</title>
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
-  <link rel="stylesheet" href="styles.css?v=20261019j">
+  <link rel="stylesheet" href="styles.css?v=20261022a">
   <script src="molmo_progress.js?v=20261019l" defer></script>
-  <script src="script.js?v=20261019l" defer></script>
+  <script src="script.js?v=20261022a" defer></script>
 </head>
 <body>
   <a class="skip-link" href="#main">Skip to content</a>
@@ -37,10 +37,10 @@
   <main id="main">
     <section class="hero page-width" aria-labelledby="hero-title">
       <div class="hero-copy reveal">
-        <p class="eyebrow"><span class="eyebrow-line"></span> Vision-language-action research <span class="eyebrow-dot">·</span> Driving &amp; manipulation</p>
         <h1 id="hero-title">Should the Action Expert <em>Train the VLM?</em></h1>
         <p class="hero-subtitle">Action-token supervision and gradient routing in Mixture-of-Transformer VLAs</p>
-        <p class="hero-dek">We disentangle these factors in autonomous driving and manipulation by independently varying action-token supervision and whether the expert’s loss updates the VLM. In open-loop driving, insulation is competitive with coupling when action tokens are supervised, but increases trajectory-prediction error by roughly 25% when they are not. Under joint training, coupling improves closed-loop performance regardless of supervision.</p>
+        <div class="hero-takeaway"><strong>VLM insulation is a training decision, not a default VLA training recipe.</strong><p>Action-token supervision and expert gradients can partly substitute for each other in learning representations useful for control. Under concurrent training, coupling improves closed-loop route progress even with action-token supervision, and the same pattern appears in manipulation.</p></div>
+        <p class="hero-dek">We disentangle these factors in autonomous driving and manipulation by independently varying action-token supervision and whether the expert’s loss updates the VLM. In open-loop driving, insulation is competitive with coupling when action tokens are supervised, but increases trajectory-prediction error by roughly 25% when they are not. Under joint training, coupling improves closed-loop performance regardless of supervision. <strong>These findings show that the value of gradient insulation depends on the VLM’s action supervision and the evaluation setting, challenging insulation as a default VLA training recipe.</strong></p>
         <div class="hero-actions">
           <a class="button button-primary" href="#overview">Methods and results <span aria-hidden="true">↓</span></a>
           <a class="button button-secondary" href="#demos"><span class="play-glyph" aria-hidden="true">▶</span> Qualitative examples</a>
@@ -50,7 +50,7 @@
       <div class="hero-figure reveal" data-delay="1">
         <div class="figure-topline"><span class="figure-kicker">Should the continuous-action loss train only the expert, or also the VLM that produces its conditioning K/V cache?</span><span>Figure 1</span></div>
         <div class="hero-figure-crop">
-          <img src="assets/figures/iclr_2027_slide_06.png" alt="Paper overview: action-token supervision and action-expert gradients are two routes for training the VLM, with driving results for tokens on and off." width="1914" height="882" fetchpriority="high">
+          <button class="image-zoom" type="button" data-zoom="assets/figures/iclr_2027_slide_06.png" data-caption="Action-token supervision and expert gradient routing in driving and manipulation." aria-label="Enlarge overview figure"><span>Enlarge figure ↗</span><img src="assets/figures/iclr_2027_slide_06.png" alt="Paper overview: action-token supervision and action-expert gradients are two routes for training the VLM, with driving results for tokens on and off." width="1914" height="882" fetchpriority="high"></button>
         </div>
         <p>We independently vary whether action tokens are supervised and whether the expert’s gradient updates the VLM.</p>
       </div>
@@ -103,7 +103,7 @@
         <div class="section-heading reveal">
           <p class="section-index">02 <span></span> Experimental design</p>
           <h2 id="method-title">Action-token supervision, gradient routing, <em>and training schedules.</em></h2>
-          <p>We test whether supervision on discrete future-action tokens changes the effect of propagating gradients from a continuous action expert into the VLM. We vary the two factors independently while holding the architecture and semantic supervision fixed.</p>
+          <p>We compare three schedules for the same four conditions. Concurrent training starts the VLM and expert together. VLM-first trains the VLM alone for 100k steps before adding the expert; expert-first trains the expert against a frozen VLM for 100k steps before updating the VLM.</p>
         </div>
         <div class="method-layout">
           <figure class="paper-figure method-figure reveal">
@@ -166,16 +166,19 @@
         <div class="result-copy reveal">
           <p class="result-eyebrow">03 / Robot manipulation <span>Task progress ↑</span></p>
           <h3 id="manipulation-title">Coupling improves observed closed-loop manipulation progress with and without FAST supervision.</h3>
-          <p>The observed gain is larger without FAST: mean progress rises from 10.3% to 32.9%, compared with 19.5% to 30.7% with FAST.</p>
-          <p class="detail-note">Equal-weight mean over BlockStackKitchen, FoodBussing, and PanClean at 400k training steps.</p>
+          <p id="manipulation-summary">The observed gain is larger without FAST: mean progress rises from 10.3% to 32.9%, compared with 19.5% to 30.7% with FAST.</p>
+          <p class="detail-note" id="manipulation-context">Equal-weight mean over BlockStackKitchen, FoodBussing, and PanClean at 400k training steps.</p>
         </div>
         <div class="manipulation-panel reveal" data-delay="1" aria-label="Manipulation progress by training condition">
-          <div class="panel-heading"><span>Three-environment average</span><span class="panel-tag">PolaRiS</span></div>
-          <div class="manip-row"><span>FAST on · Insulated</span><div class="mini-track"><i style="width:48.75%" class="mini-blue"></i></div><strong>19.5%</strong></div>
-          <div class="manip-row"><span>FAST on · Coupled</span><div class="mini-track"><i style="width:76.75%" class="mini-blue-outline"></i></div><strong>30.7%</strong></div>
-          <div class="manip-row"><span>FAST off · Insulated</span><div class="mini-track"><i style="width:25.75%" class="mini-slate"></i></div><strong>10.3%</strong></div>
-          <div class="manip-row"><span>FAST off · Coupled</span><div class="mini-track"><i style="width:82.25%" class="mini-amber"></i></div><strong>32.9%</strong></div>
-          <p>Bar scale: 0–40% progress. Coupled training without FAST achieves the highest mean progress among the four conditions.</p>
+          <div class="panel-heading"><span>Mean task progress · three PolaRiS tasks</span><span class="panel-tag" id="manipulation-family-tag">π₀.₅</span></div>
+          <div class="panel-tabs" role="group" aria-label="Manipulation model family"><button type="button" class="is-active" data-manipulation-model="pi05" aria-pressed="true">π₀.₅</button><button type="button" data-manipulation-model="molmoact2" aria-pressed="false">MolmoAct2</button></div>
+          <div class="manipulation-bars" aria-live="polite">
+            <div class="manip-row"><span>FAST on · Insulated</span><div class="mini-track"><i data-manipulation-bar="fast_insulated" style="width:48.75%" class="mini-blue"></i></div><strong data-manipulation-value="fast_insulated">19.5%</strong></div>
+            <div class="manip-row"><span>FAST on · Coupled</span><div class="mini-track"><i data-manipulation-bar="fast_coupled" style="width:76.75%" class="mini-blue-outline"></i></div><strong data-manipulation-value="fast_coupled">30.7%</strong></div>
+            <div class="manip-row"><span>FAST off · Insulated</span><div class="mini-track"><i data-manipulation-bar="no_fast_insulated" style="width:25.75%" class="mini-slate"></i></div><strong data-manipulation-value="no_fast_insulated">10.3%</strong></div>
+            <div class="manip-row"><span>FAST off · Coupled</span><div class="mini-track"><i data-manipulation-bar="no_fast_coupled" style="width:82.25%" class="mini-amber"></i></div><strong data-manipulation-value="no_fast_coupled">32.9%</strong></div>
+          </div>
+          <p id="manipulation-reference">Published π₀.₅ reference: 40.0% (CoVeR’s evaluation protocol).</p>
         </div>
       </article>
     </section>
@@ -188,7 +191,7 @@
           <p>These examples show individual rollouts. The results above report aggregate evaluations.</p>
         </div>
 
-        <div class="demo-heading reveal"><div><span class="demo-index">A / Driving</span><h3>Three scenes, four training conditions</h3><p>Each scene shows S0 300k AlpaSim rollouts for the four action-token and gradient-routing conditions. Select a scene to compare the model reasoning and predicted trajectory.</p></div><span class="demo-meta">S0 · 300k steps · 20 s</span></div>
+        <div class="demo-heading reveal"><div><span class="demo-index">A / Driving</span><h3>Three scenes, four training conditions</h3><p>Each scene shows concurrent-training AlpaSim rollouts at 300k steps for the four action-token and gradient-routing conditions. Select a scene to compare the model reasoning and predicted trajectory.</p></div><span class="demo-meta">Concurrent training · 300k steps · 20 s</span></div>
         <div class="driving-player reveal" id="driving-player">
           <div class="driving-toolbar">
             <div class="view-switch" role="group" aria-label="Driving demo"><button type="button" class="is-active" data-driving-scene="scene_01" aria-label="Demo 1: rainy left turn" aria-pressed="true">Demo 1</button><button type="button" data-driving-scene="scene_02" aria-label="Demo 2: traffic queue" aria-pressed="false">Demo 2</button><button type="button" data-driving-scene="scene_03" aria-label="Demo 3: open highway" aria-pressed="false">Demo 3</button></div>
@@ -206,7 +209,7 @@
           <figure class="paper-figure"><img src="assets/figures/closed_loop_av_qualitative.png" alt="Manuscript qualitative figure comparing selected closed-loop driving rollouts across training conditions." loading="lazy"><figcaption>Selected closed-loop driving cases from the manuscript.</figcaption></figure>
         </details>
 
-        <div class="demo-heading demo-heading-second reveal"><div><span class="demo-index">B / MolmoAct2 manipulation</span><h3>Three paired tasks</h3><p>Four S0 conditions from the same initial state and instruction in each task. The progress score updates when the PolaRiS evaluator records a new milestone.</p></div><span class="demo-meta">S0 300k · PolaRiS adaptation 1k · 15 s</span></div>
+        <div class="demo-heading demo-heading-second reveal"><div><span class="demo-index">B / MolmoAct2 manipulation</span><h3>Three paired tasks</h3><p>Four concurrent-training conditions from the same initial state and instruction in each task. The progress score updates when the PolaRiS evaluator records a new milestone.</p></div><span class="demo-meta">Concurrent training · 300k steps · PolaRiS adaptation 1k · 15 s</span></div>
         <div class="polaris-player reveal" id="molmo-player">
           <div class="driving-toolbar"><div class="view-switch" role="group" aria-label="MolmoAct2 task"><button type="button" class="is-active" data-molmo-scene="pan_clean_ic33" aria-pressed="true">PanClean</button><button type="button" data-molmo-scene="move_latte_cup_ic33" aria-pressed="false">MoveLatteCup</button><button type="button" data-molmo-scene="tape_into_container_ic13" aria-pressed="false">TapeIntoContainer</button></div></div>
           <p class="molmo-instruction"><strong id="molmo-instruction">Use the yellow sponge to scrub the blue handle frying pan.</strong></p>
@@ -221,10 +224,6 @@
       </div>
     </section>
 
-    <section class="section page-width perspective" aria-labelledby="perspective-title">
-      <div class="perspective-mark reveal">“</div>
-      <div class="perspective-copy reveal" data-delay="1"><p class="section-index">05 <span></span> Discussion</p><h2 id="perspective-title">VLM insulation is a <em>training decision</em>, not a default VLA training recipe.</h2><p>Action-token supervision and expert gradients can partly substitute for each other in learning representations useful for control. Under concurrent training, coupling improves closed-loop route progress even with action-token supervision, and the same pattern appears in manipulation.</p></div>
-    </section>
   </main>
 
   <footer class="site-footer"><div class="page-width footer-inner"><div><span class="footer-brand">MoT / VLA</span><p>Gradient routing in vision-language-action models.<br>Project page for the forthcoming arXiv manuscript.</p></div><div class="footer-links"><a href="#overview">Overview ↑</a><a href="#demos">Videos ↑</a><a href="#top">Back to top ↑</a></div></div></footer>
